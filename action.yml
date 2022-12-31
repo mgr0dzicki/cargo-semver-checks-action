@@ -15,7 +15,7 @@ inputs:
   version-tag-prefix:
     description: 'The prefix to use for the git tag for a version; the default "v" creates tags like "v1.0.0"'
     required: false
-    default: 'ver'
+    default: 'v'
 runs:
   using: "composite"
   steps:
@@ -77,4 +77,4 @@ runs:
 
         # Check for semver violations.
         cargo install cargo-semver-checks --locked
-        cargo semver-checks check-release --current /tmp/current.json --baseline /tmp/baseline.json
+        # cargo semver-checks check-release --current /tmp/current.json --baseline /tmp/baseline.json
