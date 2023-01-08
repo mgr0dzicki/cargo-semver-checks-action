@@ -41,9 +41,9 @@ async function getCargoSemverChecksDownloadURL(target: string): Promise<string> 
             'Accept': 'application/json',
         }
     });
-    console.log(response);
+    core.info(response.toString());
     const releaseInfo = await response.json();
-    console.log(releaseInfo);
+    core.info(releaseInfo.toString());
     const asset = releaseInfo["assets"].find((asset: { [x: string]: string; }) => {
         return asset['name'].endsWith(`${target}.tar.gz`)
     });
