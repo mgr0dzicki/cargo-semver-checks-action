@@ -3,8 +3,8 @@ import os = require('os');
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as toolCache from '@actions/tool-cache';
-import exec = require('@actions/exec');
 import fetch from 'node-fetch';
+import * as rustCore from '@actions-rs/core';
 
 const releaseEndpoint = 'https://api.github.com/repos/obi1kenobi/cargo-semver-checks/releases/latest'
 
@@ -31,8 +31,16 @@ async function getDownloadURL(target: string): Promise<string> {
     return asset["browser_download_url"];
 }
 
+async function installRustUp(): Promise<void> {
+    const rustup = await rustCore.RustUp.getOrInstall();
+    await rustup.call(['show']);
+    await rustup.setProfile('minimal');
+    await rustup.installToolchain('stable');
+}
+
 async function run(): Promise<void> {
-    await exec.exec('rustup', ['install', 'stable']);
+    await installRustUp();
+    const cargo = await rustCore.Cargo.get();
 
     const url = await getDownloadURL(getPlatformMatchingTarget());
     
@@ -46,7 +54,7 @@ async function run(): Promise<void> {
 
     core.addPath(binPath);
 
-    await exec.exec('cargo', ['semver-checks', 'check-release']);
+    await cargo.call(['semver-checks', 'check-release']);
 }
 
 async function main() {
