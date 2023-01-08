@@ -7,8 +7,6 @@ import * as toolCache from '@actions/tool-cache';
 import fetch from 'node-fetch';
 import * as rustCore from '@actions-rs/core';
 
-const releaseEndpoint = 'https://api.github.com/repos/obi1kenobi/cargo-semver-checks/releases/latest'
-
 function getPlatformMatchingTarget(): string {
     const platform = os.platform() as string;
     switch (platform) {
@@ -40,17 +38,14 @@ async function getCargoSemverChecksDownloadURL(target: string): Promise<string> 
     if (!token) {
         throw new Error('GITHUB_TOKEN is not set!');
     }
+    const octokit = github.getOctokit(token);
 
-    const response = await fetch(releaseEndpoint, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        }
+    const getReleaseUrl = await octokit.rest.repos.getLatestRelease({
+        owner: 'obi1kenobi',
+        repo: 'cargo-semver-checks'
     });
-    core.info(response.toString());
-    const releaseInfo = await response.json();
-    core.info(releaseInfo.toString());
-    const asset = releaseInfo["assets"].find((asset: { [x: string]: string; }) => {
+
+    const asset = getReleaseUrl.data.assets.find(asset => {
         return asset['name'].endsWith(`${target}.tar.gz`)
     });
 
@@ -58,7 +53,7 @@ async function getCargoSemverChecksDownloadURL(target: string): Promise<string> 
         throw new Error(`Couldn't find a release for target ${target}.`);
     }
 
-    return asset["browser_download_url"];
+    return asset.url;
 }
 
 async function installRustUp(): Promise<void> {
