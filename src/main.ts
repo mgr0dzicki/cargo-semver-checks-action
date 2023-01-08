@@ -6,7 +6,7 @@ import * as toolCache from '@actions/tool-cache';
 import fetch from 'node-fetch';
 import * as rustCore from '@actions-rs/core';
 
-const releaseEndpoint = 'https://api.github.com/repos/obi1kenobi/cargo-semver-checks/releas'
+const releaseEndpoint = 'https://api.github.com/repos/obi1kenobi/cargo-semver-checks/releases/latest'
 
 function getPlatformMatchingTarget(): string {
     const platform = os.platform() as string;
