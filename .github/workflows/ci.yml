@@ -16,7 +16,7 @@ jobs:
     uses: ./test-action.yml
     with:
       runs-on: windows-latest
-      
+
   test-action-macos-latest:
     uses: ./test-action.yml
     with:
