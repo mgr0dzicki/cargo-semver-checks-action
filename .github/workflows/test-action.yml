@@ -36,6 +36,8 @@ jobs:
         run: git checkout patch_change
       - name: Run the action
         uses: ./action/
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       # Assumes that the latest published normal version of `ref_slice` smaller
       # than 1.2.2 exports a public function `ref_slice`.
       # TODO: Change the crate version in the corresponding branch `major_change`
@@ -47,6 +49,8 @@ jobs:
       - name: Run the action (allowed to fail)
         id: action_major
         uses: ./action/
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         continue-on-error: true
       - name: Check the action outcome
         run: |

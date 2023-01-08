@@ -4,7 +4,6 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import * as io from '@actions/io';
 import * as toolCache from '@actions/tool-cache';
-import fetch from 'node-fetch';
 import * as rustCore from '@actions-rs/core';
 
 function getPlatformMatchingTarget(): string {
@@ -34,9 +33,9 @@ function getCheckReleaseArguments(): string[] {
 }
 
 async function getCargoSemverChecksDownloadURL(target: string): Promise<string> {
-    const token = process.env['GITHUB_TOKEN'];
+    const token = process.env['GITHUB_TOKEN'] || rustCore.input.getInput('github-token');
     if (!token) {
-        throw new Error('GITHUB_TOKEN is not set!');
+        throw new Error('Querying the GitHub API is possible only if the GitHub token is set.');
     }
     const octokit = github.getOctokit(token);
 
