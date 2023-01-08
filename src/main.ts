@@ -27,7 +27,7 @@ function getCheckReleaseArguments(): string[] {
         optionIfValueProvided('--package', rustCore.input.getInput('crate-name')),
         optionIfValueProvided('--manifest-path', rustCore.input.getInput('manifest-path')),
         rustCore.input.getInputBool('verbose') ? ' --verbose' : ''
-    ]
+    ].filter(el => el != '');
 }
 
 async function getDownloadURL(target: string): Promise<string> {
