@@ -32,7 +32,7 @@ async function getDownloadURL(target: string): Promise<string> {
 }
 
 async function run(): Promise<void> {
-    exec.exec('rustup', ['install', 'stable']);
+    await exec.exec('rustup', ['install', 'stable']);
 
     const url = await getDownloadURL(getPlatformMatchingTarget());
     
@@ -46,7 +46,7 @@ async function run(): Promise<void> {
 
     core.addPath(binPath);
 
-    exec.exec('cargo', ['semver-checks', 'check-release']);
+    await exec.exec('cargo', ['semver-checks', 'check-release']);
 }
 
 async function main() {
