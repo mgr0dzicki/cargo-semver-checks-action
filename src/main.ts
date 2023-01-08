@@ -1,6 +1,9 @@
 import os = require('os');
 
 import * as core from '@actions/core';
+import * as io from '@actions/io';
+import * as toolCache from '@actions/tool-cache';
+import exec = require('@actions/exec');
 import fetch from 'node-fetch';
 
 const releaseEndpoint = 'https://api.github.com/repos/obi1kenobi/cargo-semver-checks/releases/latest'
@@ -29,8 +32,21 @@ async function getDownloadURL(target: string): Promise<string> {
 }
 
 async function run(): Promise<void> {
+    exec.exec('rustup', ['install', 'stable']);
+
     const url = await getDownloadURL(getPlatformMatchingTarget());
-    console.log(url);
+    
+    const downloadDir = `${os.tmpdir()}/cargo-semver-checks`;
+    await io.mkdirP(downloadDir);
+
+    core.info(`downloading cargo-semver-checks from ${url}...`);
+    const tarballPath = await toolCache.downloadTool(url);
+    core.info(`extracting ${tarballPath}`);
+    const binPath = await toolCache.extractTar(tarballPath, undefined, ["xz", "--strip-components=2"]);
+
+    core.addPath(binPath);
+
+    exec.exec('cargo', ['semver-checks', 'check-release']);
 }
 
 async function main() {
