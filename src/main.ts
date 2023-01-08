@@ -39,10 +39,10 @@ async function run(): Promise<void> {
     const downloadDir = `${os.tmpdir()}/cargo-semver-checks`;
     await io.mkdirP(downloadDir);
 
-    core.info(`downloading cargo-semver-checks from ${url}...`);
+    core.info(`downloading cargo-semver-checks from ${url}`);
     const tarballPath = await toolCache.downloadTool(url);
     core.info(`extracting ${tarballPath}`);
-    const binPath = await toolCache.extractTar(tarballPath, undefined, ["xz", "--strip-components=2"]);
+    const binPath = await toolCache.extractTar(tarballPath, undefined, ["xz"]);
 
     core.addPath(binPath);
 
