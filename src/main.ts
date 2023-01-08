@@ -35,8 +35,15 @@ function getCheckReleaseArguments(): string[] {
 }
 
 async function getCargoSemverChecksDownloadURL(target: string): Promise<string> {
-    const request = await fetch(releaseEndpoint);
-    const releaseInfo = await request.json();
+    const response = await fetch(releaseEndpoint, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        }
+    });
+    console.log(response);
+    const releaseInfo = await response.json();
+    console.log(releaseInfo);
     const asset = releaseInfo["assets"].find((asset: { [x: string]: string; }) => {
         return asset['name'].endsWith(`${target}.tar.gz`)
     });
