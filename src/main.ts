@@ -1,6 +1,7 @@
 import os = require('os');
 
 import * as core from '@actions/core';
+import * as github from '@actions/github';
 import * as io from '@actions/io';
 import * as toolCache from '@actions/tool-cache';
 import fetch from 'node-fetch';
@@ -35,6 +36,11 @@ function getCheckReleaseArguments(): string[] {
 }
 
 async function getCargoSemverChecksDownloadURL(target: string): Promise<string> {
+    const token = process.env['GITHUB_TOKEN'];
+    if (!token) {
+        throw new Error('GITHUB_TOKEN is not set!');
+    }
+
     const response = await fetch(releaseEndpoint, {
         method: 'GET',
         headers: {
