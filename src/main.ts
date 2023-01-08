@@ -80,13 +80,13 @@ async function run(): Promise<void> {
     const cargo = await rustCore.Cargo.get();
 
     try {
-        installCargoSemverChecksFromPrecompiledBinary();
+        await installCargoSemverChecksFromPrecompiledBinary();
     } catch (error: any) {
         core.info('Failed to download precompiled binary of cargo-semver-checks.');
         core.info(`Error: ${error.message}`);
         core.info('Installing using cargo install...');
 
-        installCargoSemverChecksUsingCargo(cargo);
+        await installCargoSemverChecksUsingCargo(cargo);
     }
 
     await runCargoSemverChecks(cargo);
