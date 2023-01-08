@@ -13,6 +13,10 @@ function getPlatformMatchingTarget(): string {
     switch (platform) {
         case "linux":
             return "x86_64-unknown-linux-gnu"
+        case "win32":
+            return "x86_64-pc-windows-msvc"
+        case "darwin":
+            return "x86_64-apple-darwin"
         default:
             throw new Error("Unsupported runner");
     }
@@ -30,7 +34,7 @@ function getCheckReleaseArguments(): string[] {
     ].filter(el => el != '');
 }
 
-async function getDownloadURL(target: string): Promise<string> {
+async function getCargoSemverChecksDownloadURL(target: string): Promise<string> {
     const request = await fetch(releaseEndpoint);
     const releaseInfo = await request.json();
     const asset = releaseInfo["assets"].find((asset: { [x: string]: string; }) => {
@@ -56,7 +60,7 @@ async function runCargoSemverChecks(cargo: rustCore.Cargo): Promise<void> {
 }
 
 async function installCargoSemverChecksFromPrecompiledBinary(): Promise<void> {
-    const url = await getDownloadURL(getPlatformMatchingTarget());
+    const url = await getCargoSemverChecksDownloadURL(getPlatformMatchingTarget());
     
     const downloadDir = `${os.tmpdir()}/cargo-semver-checks`;
     await io.mkdirP(downloadDir);
