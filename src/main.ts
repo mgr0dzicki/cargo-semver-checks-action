@@ -1,6 +1,7 @@
 import os = require('os');
 
 import * as core from '@actions/core';
+import fetch from 'node-fetch';
 
 const releaseEndpoint = 'https://api.github.com/repos/obi1kenobi/cargo-semver-checks/releases/latest'
 
