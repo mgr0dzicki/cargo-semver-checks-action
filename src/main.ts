@@ -73,11 +73,12 @@ async function installCargoSemverChecksUsingCargo(cargo: rustCore.Cargo): Promis
     await cargo.call(['install', 'cargo-semver-checks', '--locked']);
 }
 
-async function run(): Promise<void> {
-    await installRustUp();
-
-    // At the beginning, ensure cargo is installed correctly.
-    const cargo = await rustCore.Cargo.get();
+async function installCargoSemverChecks(cargo: rustCore.Cargo): Promise<void> {
+    if (await io.which('cargo-semver-checks') != '') {
+        return;
+    }
+    
+    core.info('cargo-semver-checks is not installed, installing now...');
 
     try {
         await installCargoSemverChecksFromPrecompiledBinary();
@@ -88,7 +89,14 @@ async function run(): Promise<void> {
 
         await installCargoSemverChecksUsingCargo(cargo);
     }
+}
 
+async function run(): Promise<void> {
+    await installRustUp();
+
+    const cargo = await rustCore.Cargo.get();
+
+    await installCargoSemverChecks(cargo);
     await runCargoSemverChecks(cargo);
 }
 
