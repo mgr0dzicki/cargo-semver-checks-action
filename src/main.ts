@@ -32,12 +32,15 @@ function getCheckReleaseArguments(): string[] {
     ].filter(el => el != '');
 }
 
-async function getCargoSemverChecksDownloadURL(target: string): Promise<string> {
+function getGitHubToken(): string {
     const token = process.env['GITHUB_TOKEN'] || rustCore.input.getInput('github-token');
-    if (!token) {
+    if (!token)
         throw new Error('Querying the GitHub API is possible only if the GitHub token is set.');
-    }
-    const octokit = github.getOctokit(token);
+    return token;
+}
+
+async function getCargoSemverChecksDownloadURL(target: string): Promise<string> {
+    const octokit = github.getOctokit(getGitHubToken());
 
     const getReleaseUrl = await octokit.rest.repos.getLatestRelease({
         owner: 'obi1kenobi',
@@ -68,12 +71,11 @@ async function runCargoSemverChecks(cargo: rustCore.Cargo): Promise<void> {
 
 async function installCargoSemverChecksFromPrecompiledBinary(): Promise<void> {
     const url = await getCargoSemverChecksDownloadURL(getPlatformMatchingTarget());
-    
-    const downloadDir = `${os.tmpdir()}/cargo-semver-checks`;
-    await io.mkdirP(downloadDir);
 
     core.info(`downloading cargo-semver-checks from ${url}`);
-    const tarballPath = await toolCache.downloadTool(url);
+    const tarballPath = await toolCache.downloadTool(url, undefined, `token ${getGitHubToken()}`, {
+        accept: 'application/octet-stream'
+    });
     core.info(`extracting ${tarballPath}`);
     const binPath = await toolCache.extractTar(tarballPath, undefined, ["xz"]);
 
