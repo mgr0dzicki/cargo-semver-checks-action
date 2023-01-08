@@ -8,16 +8,19 @@ on:
 
 jobs:
   test-action-ubuntu-latest:
+    name: Test the action on ubuntu-latest
     uses: ./.github/workflows/test-action.yml
     with:
       runs-on: ubuntu-latest
 
   test-action-windows-latest:
+    name: Test the action on windows-latest
     uses: ./.github/workflows/test-action.yml
     with:
       runs-on: windows-latest
 
   test-action-macos-latest:
+    name: Test the action on macos-latest
     uses: ./.github/workflows/test-action.yml
     with:
       runs-on: macos-latest
