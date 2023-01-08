@@ -18,6 +18,18 @@ function getPlatformMatchingTarget(): string {
     }
 }
 
+function optionIfValueProvided(option: string, value?: string): string {
+    return value ? ` ${option} ${value}` : '';
+}
+
+function getCheckReleaseArguments(): string[] {
+    return [
+        optionIfValueProvided('--package', rustCore.input.getInput('crate-name')),
+        optionIfValueProvided('--manifest-path', rustCore.input.getInput('manifest-path')),
+        rustCore.input.getInputBool('verbose') ? ' --verbose' : ''
+    ]
+}
+
 async function getDownloadURL(target: string): Promise<string> {
     const request = await fetch(releaseEndpoint);
     const releaseInfo = await request.json();
@@ -54,7 +66,7 @@ async function run(): Promise<void> {
 
     core.addPath(binPath);
 
-    await cargo.call(['semver-checks', 'check-release']);
+    await cargo.call(['semver-checks', 'check-release'].concat(getCheckReleaseArguments()));
 }
 
 async function main() {
