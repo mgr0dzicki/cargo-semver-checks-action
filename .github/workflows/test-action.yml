@@ -52,11 +52,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         continue-on-error: true
-      - name: Check the action outcome
+      - name: Fail if the action has not returned any errors (but it should have)
+        if: steps.action_major.outcome != 'failure'
         run: |
-          if [[ "${{ steps.action_major.outcome }}" != 'failure' ]]; then
-            echo "Error! The action should have failed because of the breaking change, but it has not."
-            exit 1
-          else
-            echo "OK! The action has failed as expected on the breaking change."
-          fi
+          echo "Error! The action should have failed because of the breaking change, but it has not."
+          exit 1
