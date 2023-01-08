@@ -1,7 +1,6 @@
 import os = require('os');
 
 import * as core from '@actions/core';
-import * as github from '@actions/github';
 
 const releaseEndpoint = 'https://api.github.com/repos/obi1kenobi/cargo-semver-checks/releases/latest'
 
@@ -29,7 +28,6 @@ async function getDownloadURL(target: string): Promise<string> {
 }
 
 async function run(): Promise<void> {
-    const octokit = github.getOctokit('');
     const url = await getDownloadURL(getPlatformMatchingTarget());
     console.log(url);
 }
