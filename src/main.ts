@@ -37,8 +37,9 @@ async function getDownloadURL(target: string): Promise<string> {
         return asset['name'].endsWith(`${target}.tar.gz`)
     });
 
-    if (!asset)
+    if (!asset) {
         throw new Error(`Couldn't find a release for target ${target}.`);
+    }
 
     return asset["browser_download_url"];
 }
@@ -50,10 +51,11 @@ async function installRustUp(): Promise<void> {
     await rustup.installToolchain('stable');
 }
 
-async function run(): Promise<void> {
-    await installRustUp();
-    const cargo = await rustCore.Cargo.get();
+async function runCargoSemverChecks(cargo: rustCore.Cargo): Promise<void> {
+    await cargo.call(['semver-checks', 'check-release'].concat(getCheckReleaseArguments()));
+}
 
+async function installCargoSemverChecksFromPrecompiledBinary(): Promise<void> {
     const url = await getDownloadURL(getPlatformMatchingTarget());
     
     const downloadDir = `${os.tmpdir()}/cargo-semver-checks`;
@@ -65,8 +67,29 @@ async function run(): Promise<void> {
     const binPath = await toolCache.extractTar(tarballPath, undefined, ["xz"]);
 
     core.addPath(binPath);
+}
 
-    await cargo.call(['semver-checks', 'check-release'].concat(getCheckReleaseArguments()));
+async function installCargoSemverChecksUsingCargo(cargo: rustCore.Cargo): Promise<void> {
+    await cargo.call(['install', 'cargo-semver-checks', '--locked']);
+}
+
+async function run(): Promise<void> {
+    await installRustUp();
+
+    // At the beginning, ensure cargo is installed correctly.
+    const cargo = await rustCore.Cargo.get();
+
+    try {
+        installCargoSemverChecksFromPrecompiledBinary();
+    } catch (error: any) {
+        core.info('Failed to download precompiled binary of cargo-semver-checks.');
+        core.info(`Error: ${error.message}`);
+        core.info('Installing using cargo install...');
+
+        installCargoSemverChecksUsingCargo(cargo);
+    }
+
+    await runCargoSemverChecks(cargo);
 }
 
 async function main() {
