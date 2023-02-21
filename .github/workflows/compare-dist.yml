@@ -27,7 +27,6 @@ jobs:
         run: |
           if [ "$(git diff dist/ | wc -l)" -gt "0" ]; then
             echo "Detected uncommitted changes after build."
-            git diff
             exit 1
           fi
         id: diff
