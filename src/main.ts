@@ -1,5 +1,6 @@
 import os = require('os');
 
+import * as exec from '@actions/exec';
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import * as io from '@actions/io';
@@ -110,6 +111,7 @@ async function run(): Promise<void> {
     const cargo = await rustCore.Cargo.get();
 
     await installCargoSemverChecks(cargo);
+    exec.exec('dir C:\Users\runneradmin\.cargo\registry');
     await runCargoSemverChecks(cargo);
 }
 
