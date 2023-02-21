@@ -5,6 +5,7 @@ on:
 
 jobs:
   compare-dist:
+    name: Check dist/
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the action
