@@ -8,6 +8,7 @@ on:
 
 jobs:
   compare-dist:
+    name: Check if compiled action in dist/ matches the source files
     uses: ./.github/workflows/compare-dist.yml
 
   test-action:
