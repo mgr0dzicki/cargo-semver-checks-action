@@ -7,6 +7,9 @@ on:
       - main
 
 jobs:
+  compare-dist:
+    uses: ./.github/workflows/compare-dist.yml
+
   test-action:
     name: Test the action on ubuntu-latest
     uses: ./.github/workflows/test-action.yml
