@@ -111,7 +111,7 @@ async function run(): Promise<void> {
     const cargo = await rustCore.Cargo.get();
 
     await installCargoSemverChecks(cargo);
-    exec.exec('dir C:\\Users\\runneradmin\\.cargo');
+    exec.exec('mkdir C:\\Users\\runneradmin\\.cargo\\registry\\index');
     await runCargoSemverChecks(cargo);
 }
 
