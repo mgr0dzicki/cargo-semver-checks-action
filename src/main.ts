@@ -64,6 +64,10 @@ async function installRustUp(): Promise<void> {
     await rustup.call(['show']);
     await rustup.setProfile('minimal');
     await rustup.installToolchain('stable');
+
+    // [TODO] Remove this temporary fix once the underlying issue is fixed.
+    if (os.platform() == 'win32')
+        exec.exec('mkdir C:\\Users\\runneradmin\\.cargo\\registry\\index');
 }
 
 async function runCargoSemverChecks(cargo: rustCore.Cargo): Promise<void> {
@@ -111,7 +115,6 @@ async function run(): Promise<void> {
     const cargo = await rustCore.Cargo.get();
 
     await installCargoSemverChecks(cargo);
-    exec.exec('mkdir C:\\Users\\runneradmin\\.cargo\\registry\\index');
     await runCargoSemverChecks(cargo);
 }
 
