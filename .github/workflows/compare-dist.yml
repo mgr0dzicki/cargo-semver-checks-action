@@ -13,6 +13,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Login to GitHub npm registry
+        run: echo -e "${{ github.actor }}\n${{ secrets.GITHUB_TOKEN }}\n\n" |
+          npm login --scope=@actions-rs --auth-type=legacy --registry=https://npm.pkg.github.com
       - name: Install dependencies
         run: npm ci
       - name: Rebuild the action
