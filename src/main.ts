@@ -35,8 +35,9 @@ function getCheckReleaseArguments(): string[] {
 
 function getGitHubToken(): string {
     const token = process.env["GITHUB_TOKEN"] || rustCore.input.getInput("github-token");
-    if (!token)
-        throw new Error("Querying the GitHub API is possible only if the GitHub token is set.");
+    if (!token) {
+    throw new Error("Querying the GitHub API is possible only if the GitHub token is set.");
+    }
     return token;
 }
 
@@ -66,8 +67,9 @@ async function installRustUp(): Promise<void> {
     await rustup.installToolchain("stable");
 
     // [TODO] Remove this temporary fix once the underlying issue is fixed.
-    if (os.platform() == "win32")
+    if (os.platform() == "win32") {
         exec.exec("mkdir C:\\Users\\runneradmin\\.cargo\\registry\\index");
+    }
 }
 
 async function runCargoSemverChecks(cargo: rustCore.Cargo): Promise<void> {
