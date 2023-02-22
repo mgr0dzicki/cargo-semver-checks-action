@@ -36,7 +36,7 @@ function getCheckReleaseArguments(): string[] {
 function getGitHubToken(): string {
     const token = process.env["GITHUB_TOKEN"] || rustCore.input.getInput("github-token");
     if (!token) {
-    throw new Error("Querying the GitHub API is possible only if the GitHub token is set.");
+        throw new Error("Querying the GitHub API is possible only if the GitHub token is set.");
     }
     return token;
 }
