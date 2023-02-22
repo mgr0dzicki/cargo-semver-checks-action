@@ -68,7 +68,8 @@ async function installRustUp(): Promise<void> {
 
     // [TODO] Remove this temporary fix once the underlying issue is fixed.
     if (os.platform() == "win32") {
-        exec.exec("mkdir C:\\Users\\runneradmin\\.cargo\\registry\\index");
+        const indexPath = "C:\\Users\\runneradmin\\.cargo\\registry\\index\\";
+        exec.exec(`if not exist "${indexPath}" mkdir "${indexPath}"`);
     }
 }
 
