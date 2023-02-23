@@ -14,11 +14,9 @@ jobs:
     name: Test github-token input
     strategy:
       matrix:
-        token: []
-        timeout: []
+        token: [${{ github.token }}]
+        timeout: [3]
         include:
-          - token: ${{ github.token }}
-            timeout: 3
           - token: some_invalid_token
             timeout: 10
     runs-on: ubuntu-latest
