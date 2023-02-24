@@ -30,18 +30,15 @@ function getPlatformMatchingTarget(): string {
 }
 
 function optionIfValueProvided(option: string, value?: string): string {
-    return value ? ` ${option} ${value}` : "";
+    return value ? ` ${option}="${value}"` : "";
 }
 
-function getCheckReleaseArguments(): string {
+function getCheckReleaseArguments(): string[] {
     return [
-        "check-release",
         optionIfValueProvided("--package", rustCore.input.getInput("package")),
         optionIfValueProvided("--manifest-path", rustCore.input.getInput("manifest-path")),
         rustCore.input.getInputBool("verbose") ? " --verbose" : "",
-    ]
-        .filter((el) => el != "")
-        .join(" ");
+    ].filter((el) => el != "");
 }
 
 function getGitHubToken(): string {
@@ -88,7 +85,7 @@ async function installRustUp(): Promise<void> {
 }
 
 async function runCargoSemverChecks(cargo: rustCore.Cargo): Promise<void> {
-    await cargo.call(["semver-checks", getCheckReleaseArguments()]);
+    await cargo.call(["semver-checks", "check-release"].concat(getCheckReleaseArguments()));
 }
 
 async function installCargoSemverChecksFromPrecompiledBinary(): Promise<void> {
