@@ -1,0 +1,15 @@
+name: Setup test workspace
+runs:
+  using: 'composite'
+  steps:
+      - name: Checkout the ref-slice fork
+        uses: actions/checkout@v3
+        with:
+          repository: mgr0dzicki/cargo-semver-action-ref-slice
+          fetch-depth: 0
+          persist-credentials: true
+          path: ref_slice
+      - name: Create dummy crate
+        run: cargo new cargo-semver-action-dummy --lib
+      - name: Create workspace Cargo.toml
+        run: echo -e "[workspace]\nmembers=[ref_slice, cargo-semver-action-dummy]" > Cargo.toml
