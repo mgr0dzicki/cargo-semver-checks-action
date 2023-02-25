@@ -11,5 +11,7 @@ runs:
           path: ref_slice
       - name: Create dummy crate
         run: cargo new cargo-semver-action-dummy --lib
+        shell: bash
       - name: Create workspace Cargo.toml
         run: echo -e "[workspace]\nmembers=[ref_slice, cargo-semver-action-dummy]" > Cargo.toml
+        shell: bash
