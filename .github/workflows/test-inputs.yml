@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup the workspace
-        uses: ./.github/workflows/setup-test-workspace.yml
+        uses: ./.github/workflows/setup-test-workspace
       - name: Checkout the action
         uses: actions/checkout@v3
         with:
