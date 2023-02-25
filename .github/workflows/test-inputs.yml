@@ -15,7 +15,9 @@ jobs:
       - name: Checkout the test repository
         uses: actions/checkout@v3
         with:
-          path: ref-slice
+          # Space inside the directory name is used in order to ensure it will
+          # be handled properly by the action.
+          path: 'ref slice'
           repository: mgr0dzicki/cargo-semver-action-ref-slice
           fetch-depth: 0
           persist-credentials: true
@@ -31,12 +33,12 @@ jobs:
       # working correctly.
       - name: Checkout the test with patch change and patch version bump
         run: |
-          cd ref-slice
+          cd "ref slice"
           git checkout patch_change
       - name: Run the action
         uses: ./action/
         with:
-          manifest-path: ref-slice/Cargo.toml
+          manifest-path: 'ref slice/Cargo.toml'
       # Assumes that the latest published normal version of `ref_slice` smaller
       # than 1.2.2 exports a public function `ref_slice`.
       # TODO: Change the crate version in the corresponding branch `major_change`
@@ -45,13 +47,13 @@ jobs:
       # working correctly.
       - name: Checkout the test with major change and patch version bump
         run: |
-          cd ref-slice
+          cd "ref slice"
           git checkout major_change
       - name: Run the action (allowed to fail)
         id: action_major
         uses: ./action/
         with:
-          manifest-path: ref-slice/Cargo.toml
+          manifest-path: 'ref slice/Cargo.toml'
         continue-on-error: true
       - name: Fail if the action has not returned any errors (but it should have)
         if: steps.action_major.outcome != 'failure'
