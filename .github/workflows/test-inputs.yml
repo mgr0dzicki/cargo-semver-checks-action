@@ -19,12 +19,12 @@ jobs:
     name: Test input package
     runs-on: ubuntu-latest
     steps:
-      - name: Setup the workspace
-        uses: ./.github/workflows/setup-test-workspace
       - name: Checkout the action
         uses: actions/checkout@v3
         with:
           path: action
+      - name: Setup the workspace
+        uses: action/.github/workflows/setup-test-workspace
       - name: Checkout the test with patch change and patch version bump
         run: |
           cd ref_slice
