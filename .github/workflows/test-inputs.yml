@@ -24,7 +24,7 @@ jobs:
         with:
           path: action
       - name: Setup the workspace
-        uses: action/.github/workflows/setup-test-workspace
+        uses: ./action/.github/workflows/setup-test-workspace
       - name: Checkout the test with patch change and patch version bump
         run: |
           cd ref_slice
