@@ -58,6 +58,27 @@ jobs:
           echo "Error! The action should have failed because of the breaking change, but it has not."
           exit 1
 
+  test-verbose:
+    # There is currently no way of asserting that the output is indeed verbose,
+    # so we at least check if the action runs without an error when the
+    # verbose option is enabled.
+    name: Test input verbose
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the test repository
+        uses: actions/checkout@v3
+        with:
+          repository: mgr0dzicki/cargo-semver-action-ref-slice
+          ref: patch_change
+      - name: Checkout the action
+        uses: actions/checkout@v3
+        with:
+          path: action
+      - name: Run the action on ref_slice patch change
+        uses: ./action/
+        with:
+          verbose: true
+
   test-manifest-path-with-space:
     name: Test input manifest-path against path containing space
     runs-on: ubuntu-latest
