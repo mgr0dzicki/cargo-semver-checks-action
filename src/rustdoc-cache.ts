@@ -14,8 +14,9 @@ export class RustdocCache {
     }
 
     async restore(): Promise<boolean> {
-        if (await cache.restoreCache([this.cachePath], this.cacheKey)) {
-            core.info(`Restored rustdoc cache successfully.`);
+        const key = await cache.restoreCache([this.cachePath], this.cacheKey);
+        if (key) {
+            core.info(`Restored rustdoc cache from key: ${key}.`);
             return true;
         } else {
             core.info("Rustdoc cache not found.");
