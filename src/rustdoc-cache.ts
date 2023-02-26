@@ -1,3 +1,6 @@
+import os = require("os");
+
+import * as path from "path";
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 import * as rustCore from "@actions-rs/core";
@@ -7,10 +10,15 @@ export class RustdocCache {
     private readonly cacheKey: string;
 
     constructor() {
-        this.cachePath = core.toPlatformPath(
-            (rustCore.input.getInput("manifest-path") || ".") + "/target/semver-checks/cache"
-        );
-        this.cacheKey = rustCore.input.getInput("cache-key") + "-semver-checks-rustdoc";
+        const manifestPath = rustCore.input.getInput("manifest-path") || "./";
+        const manifestDir = path.extname(manifestPath) ? path.dirname(manifestPath) : manifestPath;
+        this.cachePath = path.join(manifestDir, "target", "semver-checks", "cache");
+
+        this.cacheKey = [
+            rustCore.input.getInput("cache-key"),
+            os.platform() as string,
+            "semver-checks-rustdoc",
+        ].join("-");
     }
 
     async restore(): Promise<boolean> {
