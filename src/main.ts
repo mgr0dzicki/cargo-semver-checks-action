@@ -131,7 +131,7 @@ async function run(): Promise<void> {
     const cargo = await rustCore.Cargo.get();
 
     const cache = new RustdocCache();
-    const cacheFound = cache.restore();
+    const cacheFound = await cache.restore();
 
     await installCargoSemverChecks(cargo);
     await runCargoSemverChecks(cargo);

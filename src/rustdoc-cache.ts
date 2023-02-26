@@ -25,7 +25,7 @@ export class RustdocCache {
     }
 
     async save(): Promise<void> {
-        core.info(`Saving rustdoc cache...`);
+        core.info(`Saving rustdoc cache using key: ${this.cacheKey}...`);
         await cache.saveCache([this.cachePath], this.cacheKey);
     }
 }
