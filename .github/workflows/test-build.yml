@@ -19,7 +19,7 @@ jobs:
       - name: Login to GitHub npm registry
         run: |
           npm-cli-login -s @actions-rs -r https://npm.pkg.github.com \
-            -u $ -p ${{ secrets.GITHUB_TOKEN }} -e test@example.com
+            -p ${{ secrets.GITHUB_TOKEN }} -e test@example.com
       - name: Install dependencies
         run: npm ci
       - name: Rebuild the action
