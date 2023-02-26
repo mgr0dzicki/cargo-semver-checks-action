@@ -17,6 +17,9 @@ inputs:
     type: boolean
     required: true
     default: false
+  cache-key:
+    required: true
+    default: ${{ github.job }}
   github-token:
     description: 'The `GITHUB_TOKEN` secret used to download precompiled binaries from GitHub API. If not specified, the automatic GitHub token provided to the workflow will be used.'
     required: false

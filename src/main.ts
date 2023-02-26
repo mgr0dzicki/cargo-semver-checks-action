@@ -7,6 +7,8 @@ import * as io from "@actions/io";
 import * as toolCache from "@actions/tool-cache";
 import * as rustCore from "@actions-rs/core";
 
+import { RustdocCache } from "./rustdoc-cache";
+
 function getErrorMessage(error: unknown): string {
     if (error instanceof Error) {
         return error.message;
@@ -128,8 +130,15 @@ async function run(): Promise<void> {
 
     const cargo = await rustCore.Cargo.get();
 
+    const cache = new RustdocCache();
+    const cacheFound = cache.restore();
+
     await installCargoSemverChecks(cargo);
     await runCargoSemverChecks(cargo);
+
+    if (!cacheFound) {
+        cache.save();
+    }
 }
 
 async function main() {
