@@ -13,27 +13,29 @@ export class RustdocCache {
         const manifestPath = rustCore.input.getInput("manifest-path") || "./";
         const manifestDir = path.extname(manifestPath) ? path.dirname(manifestPath) : manifestPath;
         this.cachePath = path.join(manifestDir, "target", "semver-checks", "cache");
+        core.info(`Rustdoc cache path: ${this.cachePath}.`);
 
         this.cacheKey = [
             rustCore.input.getInput("cache-key"),
             os.platform() as string,
             "semver-checks-rustdoc",
         ].join("-");
+        core.info(`Rustdoc cache key: ${this.cacheKey}.`);
     }
 
     async restore(): Promise<boolean> {
         const key = await cache.restoreCache([this.cachePath], this.cacheKey);
         if (key) {
-            core.info(`Restored rustdoc cache from key: ${key}.`);
+            core.info(`Restored rustdoc cache.`);
             return true;
         } else {
-            core.info("Rustdoc cache not found.");
+            core.info(`Rustdoc cache not found.`);
             return false;
         }
     }
 
     async save(): Promise<void> {
-        core.info(`Saving rustdoc cache using key: ${this.cacheKey}...`);
+        core.info("Saving rustdoc cache...");
         await cache.saveCache([this.cachePath], this.cacheKey);
     }
 }

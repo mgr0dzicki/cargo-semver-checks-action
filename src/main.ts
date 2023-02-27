@@ -137,7 +137,7 @@ async function run(): Promise<void> {
     await runCargoSemverChecks(cargo);
 
     if (!cacheFound) {
-        cache.save();
+        await cache.save();
     }
 }
 
