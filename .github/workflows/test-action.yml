@@ -23,16 +23,16 @@ jobs:
     name: Run tests
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - name: Checkout the action
-        uses: actions/checkout@v3
-        with:
-          path: action
-      - name: Checkout the test with patch change and patch version bump
+      - name: Checkout the test repository and test with patch change and patch version bump
         uses: actions/checkout@v3
         with:
           repository: mgr0dzicki/cargo-semver-action-ref-slice
           ref: patch_change
           persist-credentials: true
+      - name: Checkout the action
+        uses: actions/checkout@v3
+        with:
+          path: action
       - name: Run the action
         uses: ./action/
       - name: Checkout the test with major change and patch version bump
