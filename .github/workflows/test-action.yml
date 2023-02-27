@@ -37,7 +37,7 @@ jobs:
         uses: ./action/
       - name: Checkout the test with major change and patch version bump
         run: |
-          git fetch major_change
+          git fetch origin major_change
           git checkout major_change
       - name: Run the action (allowed to fail)
         id: action_major
