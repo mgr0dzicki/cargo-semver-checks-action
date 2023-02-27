@@ -19,6 +19,10 @@ jobs:
     name: Test input package (patch change)
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the action
+        uses: actions/checkout@v3
+        with:
+          path: action
       - name: Setup the workspace with ref_slice patch change
         uses: ./action/.github/workflows/setup-test-workspace
         with:
@@ -41,6 +45,10 @@ jobs:
     name: Test input package (major change)
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the action
+        uses: actions/checkout@v3
+        with:
+          path: action
       - name: Setup the workspace with ref_slice major change
         uses: ./action/.github/workflows/setup-test-workspace
         with:
@@ -82,6 +90,10 @@ jobs:
     name: Test input manifest-path (patch change)
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the action
+        uses: actions/checkout@v3
+        with:
+          path: action
       - name: Setup the workspace with ref_slice patch change
         uses: ./action/.github/workflows/setup-test-workspace
         with:
@@ -110,6 +122,10 @@ jobs:
     name: Test input manifest-path (major change)
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the action
+        uses: actions/checkout@v3
+        with:
+          path: action
       - name: Setup the workspace with ref_slice major change
         uses: ./action/.github/workflows/setup-test-workspace
         with:
