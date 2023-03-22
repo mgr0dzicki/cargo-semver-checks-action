@@ -1,4 +1,5 @@
 import os = require("os");
+import hashFiles = require("hash-files");
 
 import * as path from "path";
 import * as cache from "@actions/cache";
@@ -16,6 +17,7 @@ export class RustdocCache {
         this.cacheKey = [
             rustCore.input.getInput("cache-key"),
             os.platform() as string,
+            this.getCargoLocksHash(),
             "semver-checks-rustdoc",
         ].join("-");
         core.info(`Rustdoc cache key: ${this.cacheKey}.`);
@@ -35,5 +37,13 @@ export class RustdocCache {
     async save(): Promise<void> {
         core.info("Saving rustdoc cache...");
         await cache.saveCache([this.cachePath], this.cacheKey);
+    }
+
+    private getCargoLocksHash(): string {
+        const manifestPath = rustCore.input.getInput("manifest-path") || "./";
+        const manifestDir = path.extname(manifestPath) ? path.dirname(manifestPath) : manifestPath;
+        return hashFiles.sync({
+            files: [path.join(manifestDir, "**", "Cargo.lock")],
+        });
     }
 }
