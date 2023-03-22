@@ -4,16 +4,14 @@ import * as path from "path";
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 import * as rustCore from "@actions-rs/core";
-import * as exec from "@actions/exec";
 
 export class RustdocCache {
     private readonly cachePath: string;
     private readonly cacheKey: string;
 
     constructor() {
-        const manifestPath = rustCore.input.getInput("manifest-path") || "./";
-        const manifestDir = path.extname(manifestPath) ? path.dirname(manifestPath) : manifestPath;
-        this.cachePath = path.join(manifestDir, "target", "semver-checks", "cache");
+        process.env["CARGO_TARGET_DIR"] = "target";
+        this.cachePath = path.join("target", "semver-checks", "cache");
         core.info(`Rustdoc cache path: ${this.cachePath}.`);
 
         this.cacheKey = [
@@ -37,11 +35,6 @@ export class RustdocCache {
 
     async save(): Promise<void> {
         core.info("Saving rustdoc cache...");
-        try {
-            await exec.exec("ls ref_slice");
-        } catch (error) {
-            core.info("Ajjj.");
-        }
         await cache.saveCache([this.cachePath], this.cacheKey);
     }
 }
