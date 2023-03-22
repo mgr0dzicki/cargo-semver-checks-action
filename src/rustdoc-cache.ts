@@ -10,7 +10,6 @@ export class RustdocCache {
     private readonly cacheKey: string;
 
     constructor() {
-        process.env["CARGO_TARGET_DIR"] = "target";
         this.cachePath = path.join("target", "semver-checks", "cache");
         core.info(`Rustdoc cache path: ${this.cachePath}.`);
 

@@ -87,6 +87,7 @@ async function installRustUp(): Promise<void> {
 }
 
 async function runCargoSemverChecks(cargo: rustCore.Cargo): Promise<void> {
+    process.env["CARGO_TARGET_DIR"] = "target";
     await cargo.call(["semver-checks", "check-release"].concat(getCheckReleaseArguments()));
 }
 
