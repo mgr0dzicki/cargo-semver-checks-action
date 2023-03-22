@@ -4,6 +4,7 @@ import * as path from "path";
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 import * as rustCore from "@actions-rs/core";
+import * as exec from "@actions/exec";
 
 export class RustdocCache {
     private readonly cachePath: string;
@@ -36,6 +37,11 @@ export class RustdocCache {
 
     async save(): Promise<void> {
         core.info("Saving rustdoc cache...");
+        try {
+            await exec.exec("ls ref_slice/target");
+        } catch (error) {
+            core.info("Ajjj.");
+        }
         await cache.saveCache([this.cachePath], this.cacheKey);
     }
 }
