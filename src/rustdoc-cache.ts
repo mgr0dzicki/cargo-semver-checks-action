@@ -38,7 +38,7 @@ export class RustdocCache {
     async save(): Promise<void> {
         core.info("Saving rustdoc cache...");
         try {
-            await exec.exec("ls ref_slice/target");
+            await exec.exec("ls ref_slice");
         } catch (error) {
             core.info("Ajjj.");
         }
