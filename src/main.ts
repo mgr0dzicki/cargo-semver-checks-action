@@ -75,6 +75,8 @@ async function installRustUp(): Promise<void> {
     await rustup.call(["show"]);
     await rustup.setProfile("minimal");
     await rustup.installToolchain("stable");
+    core.info(`activeToolchain: ${await rustup.activeToolchain()}`);
+    core.info(`stdout: ${await rustup.callStdout(["show", "active-toolchain"])}`);
 
     // [TODO] Remove this temporary fix once the underlying issue is fixed.
     if (os.platform() == "win32") {
