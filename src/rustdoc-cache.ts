@@ -18,7 +18,7 @@ export class RustdocCache {
         this.cacheKey = [
             rustCore.input.getInput("cache-key"),
             os.platform() as string,
-            (await this.getRustcVersion()).replace(" ", "_"),
+            await this.getRustcVersion(),
             this.getCargoLocksHash(),
             "semver-checks-rustdoc",
         ].join("-");
@@ -57,6 +57,6 @@ export class RustdocCache {
             },
         };
         await exec.exec("rustc", ["--version"], execOptions);
-        return stdout;
+        return stdout.trim().replace(/\s/g, " ");
     }
 }
