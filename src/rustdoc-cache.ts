@@ -57,6 +57,6 @@ export class RustdocCache {
             },
         };
         await exec.exec("rustc", ["--version"], execOptions);
-        return stdout.trim().replace(/\s/g, " ");
+        return stdout.trim().replace(/\s/g, "_");
     }
 }
