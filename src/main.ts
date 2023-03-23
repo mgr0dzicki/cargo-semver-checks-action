@@ -75,6 +75,18 @@ async function installRustUp(): Promise<void> {
     await rustup.call(["show"]);
     await rustup.setProfile("minimal");
     await rustup.installToolchain("stable");
+
+    let stdout = "";
+    const options = Object.assign({}, null, {
+        listeners: {
+            stdout: (buffer: Buffer): void => {
+                stdout += buffer.toString();
+            },
+        },
+    });
+    await exec.exec("rustc", ["--version"], options);
+    core.info(`rustc version: ${stdout}`);
+
     core.info(`activeToolchain: ${await rustup.activeToolchain()}`);
     core.info(`stdout: ${await rustup.callStdout(["show", "active-toolchain"])}`);
 
