@@ -12,6 +12,11 @@ export class RustdocCache {
     private cacheKey = "";
 
     async save(): Promise<void> {
+        core.info("Saving rustdoc cache...");
+        await cache.saveCache([this.cachePath], this.cacheKey);
+    }
+
+    async restore(): Promise<boolean> {
         this.cachePath = path.join("target", "semver-checks", "cache");
         core.info(`Rustdoc cache path: ${this.cachePath}.`);
 
@@ -24,11 +29,6 @@ export class RustdocCache {
         ].join("-");
         core.info(`Rustdoc cache key: ${this.cacheKey}.`);
 
-        core.info("Saving rustdoc cache...");
-        await cache.saveCache([this.cachePath], this.cacheKey);
-    }
-
-    async restore(): Promise<boolean> {
         const key = await cache.restoreCache([this.cachePath], this.cacheKey);
         if (key) {
             core.info(`Restored rustdoc cache.`);
