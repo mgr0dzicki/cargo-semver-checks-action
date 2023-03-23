@@ -8,28 +8,24 @@ import * as core from "@actions/core";
 import * as rustCore from "@actions-rs/core";
 
 export class RustdocCache {
-    private cachePath = "";
-    private cacheKey = "";
+    private readonly cachePath;
+    private __cacheKey = "";
+
+    constructor() {
+        this.cachePath = path.join("target", "semver-checks", "cache");
+    }
 
     async save(): Promise<void> {
         core.info("Saving rustdoc cache...");
-        await cache.saveCache([this.cachePath], this.cacheKey);
+        await cache.saveCache([this.cachePath], await this.cacheKey());
     }
 
     async restore(): Promise<boolean> {
-        this.cachePath = path.join("target", "semver-checks", "cache");
+        core.info("Restoring rustdoc cache...");
         core.info(`Rustdoc cache path: ${this.cachePath}.`);
+        core.info(`Rustdoc cache key: ${this.cacheKey()}.`);
 
-        this.cacheKey = [
-            rustCore.input.getInput("cache-key"),
-            os.platform() as string,
-            await this.getRustcVersion(),
-            this.getCargoLocksHash(),
-            "semver-checks-rustdoc",
-        ].join("-");
-        core.info(`Rustdoc cache key: ${this.cacheKey}.`);
-
-        const key = await cache.restoreCache([this.cachePath], this.cacheKey);
+        const key = await cache.restoreCache([this.cachePath], await this.cacheKey());
         if (key) {
             core.info(`Restored rustdoc cache.`);
             return true;
@@ -37,6 +33,20 @@ export class RustdocCache {
             core.info(`Rustdoc cache not found.`);
             return false;
         }
+    }
+
+    private async cacheKey(): Promise<string> {
+        if (!this.__cacheKey) {
+            this.__cacheKey = [
+                rustCore.input.getInput("cache-key"),
+                os.platform() as string,
+                await this.getRustcVersion(),
+                this.getCargoLocksHash(),
+                "semver-checks-rustdoc",
+            ].join("-");
+        }
+
+        return this.__cacheKey;
     }
 
     private getCargoLocksHash(): string {
