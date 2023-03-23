@@ -23,7 +23,7 @@ export class RustdocCache {
     async restore(): Promise<boolean> {
         core.info("Restoring rustdoc cache...");
         core.info(`Rustdoc cache path: ${this.cachePath}.`);
-        core.info(`Rustdoc cache key: ${this.cacheKey()}.`);
+        core.info(`Rustdoc cache key: ${await this.cacheKey()}.`);
 
         const key = await cache.restoreCache([this.cachePath], await this.cacheKey());
         if (key) {
