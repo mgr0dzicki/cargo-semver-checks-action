@@ -16,7 +16,8 @@ inputs:
     required: true
     default: false
   cache-key:
-    required: true
+    description: 'Rustdoc baseline is cached separately for runs that differ in at least one of the following: runner OS, `rustc` version, `cargo-semver-checks` version, or any of the `Cargo.lock` files in the current workspace. This input might be used to further separate the caches by providing the unique key (by default the job name) for each of them.'
+    required: false
     default: ${{ github.job }}
   github-token:
     description: 'The `GITHUB_TOKEN` secret used to download precompiled binaries from GitHub API. If not specified, the automatic GitHub token provided to the workflow will be used.'
