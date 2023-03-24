@@ -61,19 +61,17 @@ export class RustdocCache {
     }
 
     private async getRustcVersion(): Promise<string> {
-        let stdout = "";
-        const execOptions = {
-            listeners: {
-                stdout: (buffer: Buffer): void => {
-                    stdout += buffer.toString();
-                },
-            },
-        };
-        await exec.exec("rustc", ["--version"], execOptions);
-        return stdout.trim().replace(/\s/g, "_");
+        return await this.keyFromCommandCall("rustc", ["--version"]);
     }
 
     private async getCargoSemverChecksVersion(): Promise<string> {
+        return await this.keyFromCommandCall(this.cargo, ["semver-checks", "--version"]);
+    }
+
+    private async keyFromCommandCall(
+        command: string | rustCore.Cargo,
+        args: string[]
+    ): Promise<string> {
         let stdout = "";
         const execOptions = {
             listeners: {
@@ -82,7 +80,13 @@ export class RustdocCache {
                 },
             },
         };
-        await this.cargo.call(["semver-checks", "--version"], execOptions);
+
+        if (command instanceof rustCore.Cargo) {
+            await command.call(args, execOptions);
+        } else {
+            await exec.exec(command, args, execOptions);
+        }
+
         return stdout.trim().replace(/\s/g, "-");
     }
 }
