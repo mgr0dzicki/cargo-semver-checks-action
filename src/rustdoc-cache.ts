@@ -9,10 +9,12 @@ import * as rustCore from "@actions-rs/core";
 
 export class RustdocCache {
     private readonly cachePath;
+    private readonly cargo;
     private __cacheKey = "";
 
-    constructor() {
+    constructor(cargo: rustCore.Cargo) {
         this.cachePath = path.join("target", "semver-checks", "cache");
+        this.cargo = cargo;
     }
 
     async save(): Promise<void> {
@@ -41,6 +43,7 @@ export class RustdocCache {
                 rustCore.input.getInput("cache-key"),
                 os.platform() as string,
                 await this.getRustcVersion(),
+                await this.getCargoSemverChecksVersion(),
                 this.getCargoLocksHash(),
                 "semver-checks-rustdoc",
             ].join("-");
@@ -68,5 +71,18 @@ export class RustdocCache {
         };
         await exec.exec("rustc", ["--version"], execOptions);
         return stdout.trim().replace(/\s/g, "_");
+    }
+
+    private async getCargoSemverChecksVersion(): Promise<string> {
+        let stdout = "";
+        const execOptions = {
+            listeners: {
+                stdout: (buffer: Buffer): void => {
+                    stdout += buffer.toString();
+                },
+            },
+        };
+        await this.cargo.call(["semver-checks", "--version"], execOptions);
+        return stdout.trim().replace(/\s/g, "-");
     }
 }
