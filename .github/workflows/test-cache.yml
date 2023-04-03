@@ -1,0 +1,30 @@
+name: Test rustdoc caching
+
+on:
+  workflow_call:
+
+jobs:
+  test-cache-exists:
+    name: Check if the cache exists after running the action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the test repository and test with patch change and patch version bump
+        uses: actions/checkout@v3
+        with:
+          path: 'ref_slice'
+          repository: mgr0dzicki/cargo-semver-action-ref-slice
+          ref: patch_change
+      - name: Checkout the action
+        uses: actions/checkout@v3
+        with:
+          path: action
+      - name: Run the action
+        uses: ./action/
+        with:
+          manifest-path: 'ref_slice/Cargo.toml'
+      - name: Check if the cache exists
+        run: |
+          if ! grep -q "ref_slice-1.2.1/src/lib.rs" "semver-checks/target/semver-checks/cache/registry-ref_slice-1_2_1.json"; then
+            echo "Non-existent or invalid cache file!"
+            exit 1
+          fi
