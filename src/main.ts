@@ -148,14 +148,9 @@ async function run(): Promise<void> {
         path.join(CARGO_TARGET_DIR, "semver-checks", "cache"),
         manifestDir
     );
-    const cacheFound = await cache.restore();
-    const restoredCacheHash = cache.getLocalCacheHash();
 
+    await cache.restore();
     await runCargoSemverChecks(cargo);
-
-    /*if (!cacheFound || restoredCacheHash != cache.getLocalCacheHash()) {
-        await cache.save();
-    }*/
     await cache.save();
 }
 
