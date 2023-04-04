@@ -153,9 +153,10 @@ async function run(): Promise<void> {
 
     await runCargoSemverChecks(cargo);
 
-    if (!cacheFound || restoredCacheHash != cache.getLocalCacheHash()) {
+    /*if (!cacheFound || restoredCacheHash != cache.getLocalCacheHash()) {
         await cache.save();
-    }
+    }*/
+    await cache.save();
 }
 
 async function main() {
