@@ -32,7 +32,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: restored-cache
-          key: run-tests-linux-rustc-1.68.2-(9eb3afe9e-2023-03-27)-cargo-semver-checks-0.19.0-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
+          key: test-cache-exists-linux-rustc-1.68.2-(9eb3afe9e-2023-03-27)-cargo-semver-checks-0.19.0-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
       - name: Compare local and downloaded cache files
         run: |
           if ! diff -r "semver-checks/target/semver-checks/cache" "restored-cache"; then
