@@ -53,6 +53,16 @@ export class RustdocCache {
         }
     }
 
+    getLocalCacheHash(): string {
+        try {
+            return hashFiles.sync({
+                files: [path.join(this.cachePath, "**")],
+            });
+        } catch (error) {
+            return "";
+        }
+    }
+
     private async cacheKey(): Promise<string> {
         if (!this.__cacheKey) {
             this.__cacheKey = [
@@ -69,9 +79,13 @@ export class RustdocCache {
     }
 
     private getCargoLocksHash(): string {
-        return hashFiles.sync({
-            files: [path.join(this.workspaceRoot, "**", "Cargo.lock")],
-        });
+        try {
+            return hashFiles.sync({
+                files: [path.join(this.workspaceRoot, "**", "Cargo.lock")],
+            });
+        } catch (error) {
+            return "";
+        }
     }
 
     private async getRustcVersion(): Promise<string> {

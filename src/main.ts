@@ -149,10 +149,11 @@ async function run(): Promise<void> {
         manifestDir
     );
     const cacheFound = await cache.restore();
+    const restoredCacheHash = cache.getLocalCacheHash();
 
     await runCargoSemverChecks(cargo);
 
-    if (!cacheFound) {
+    if (!cacheFound || restoredCacheHash != cache.getLocalCacheHash()) {
         await cache.save();
     }
 }
