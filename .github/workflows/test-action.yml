@@ -19,7 +19,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  run-testss:
+  run-tests:
     name: Run tests
     runs-on: ${{ inputs.runs-on }}
     steps:
