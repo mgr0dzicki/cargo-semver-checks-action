@@ -22,9 +22,20 @@ jobs:
         uses: ./action/
         with:
           manifest-path: 'ref_slice/Cargo.toml'
-      - name: Check if the cache exists
+      - name: Check if the cache directory exists
         run: |
           if ! grep -q "ref_slice-1.2.1/src/lib.rs" "semver-checks/target/semver-checks/cache/registry-ref_slice-1_2_1.json"; then
             echo "Non-existent or invalid cache file!"
+            exit 1
+          fi
+      - name: Download saved cache
+        uses: actions/cache/restore@v3
+        with:
+          path: restored-cache
+          key: run-tests-linux-rustc-1.68.2-(9eb3afe9e-2023-03-27)-cargo-semver-checks-0.19.0-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
+      - name: Compare local and downloaded cache files
+        run: |
+          if ! diff -r "semver-checks/target/semver-checks/cache" "restored-cache" then
+            echo "Updated cache does not match the local version!"
             exit 1
           fi
