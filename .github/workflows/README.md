@@ -1,4 +1,4 @@
-The testing workflow is divided into three parts:
+The testing workflow is divided into several parts:
  - `test-build.yml` is run on `ubuntu-latest` and contains source-related checks:
  linters, formatters and verifying whether the sources match dist/ directory.
  - `test-action.yml` contains simple, general integration tests of the action
