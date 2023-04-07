@@ -30,11 +30,14 @@ jobs:
             echo "Non-existent or invalid cache file!"
             exit 1
           fi
+      - name: Move the cache created by the action
+        run: |
+          mv semver-checks/target/semver-checks/cache restored-cache
+          ls semver-checks/target/semver-checks
       - name: Download saved cache
         uses: actions/cache/restore@v3
         with:
           path: ${{ github.workspace }}/semver-checks/target/semver-checks/cache
-          key: testprefix-testkey
           restore-keys: |
             testprefix-testkey-linux-rustc-1.68.2-(9eb3afe9e-2023-03-27)-cargo-semver-checks-0.19.0-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
       - name: Compare local and downloaded cache files
