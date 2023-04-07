@@ -39,7 +39,7 @@ jobs:
           fi
       - name: Move the cache created by the action
         run: |
-          mv semver-checks/target/semver-checks/cache restored-cache
+          mv semver-checks/target/semver-checks/cache action-cache
       - name: Check tools versions
         id: versions
         run: |
@@ -55,7 +55,7 @@ jobs:
             testprefix-testkey-linux-${{ steps.versions.outputs.RUSTC }}-${{ steps.versions.outputs.SEMVER_CHECKS }}-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
       - name: Compare local and downloaded cache files
         run: |
-          if ! diff -r "semver-checks/target/semver-checks/cache" "restored-cache"; then
-            echo "Updated cache does not match the local version!"
+          if ! diff -r "semver-checks/target/semver-checks/cache" "action-cache"; then
+            echo "Downloaded cache does not match the local version!"
             exit 1
           fi
