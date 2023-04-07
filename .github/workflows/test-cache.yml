@@ -33,6 +33,11 @@ jobs:
       - name: Move the cache created by the action
         run: |
           mv semver-checks/target/semver-checks/cache restored-cache
+      - name: Check tools versions
+        id: versions
+        run: |
+          echo "RUSTC_VERSION=$(rustc --version | sed -e 's/\s\+/-/g')" >> $GITHUB_OUTPUT
+          echo "SEMVER_CHECKS_VERSION=$(cargo semver-checks --version | sed -e 's/\s\+/-/g')" >> $GITHUB_OUTPUT
       - name: Download saved cache
         uses: actions/cache/restore@v3
         with:
@@ -40,7 +45,7 @@ jobs:
           fail-on-cache-miss: true
           key: test
           restore-keys: |
-            testprefix-testkey-linux-rustc-1.68.2-(9eb3afe9e-2023-03-27)-cargo-semver-checks-0.19.0-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
+            testprefix-testkey-linux-${{ steps.versions.RUSTC_VERSION }}-${{ steps.versions.SEMVER_CHECKS_VERSION }}-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
       - name: Compare local and downloaded cache files
         run: |
           if ! diff -r "semver-checks/target/semver-checks/cache" "restored-cache"; then
