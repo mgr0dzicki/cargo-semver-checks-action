@@ -191,8 +191,8 @@ jobs:
           echo "Error! The action should have failed because of the breaking change, but it has not."
           exit 1
 
-  test-rust-toolchain-with-directory-override:
-    name: Test the action with toolchain override set using rustup
+  test-rust-toolchain-against-directory-override:
+    name: Test the action against toolchain override set using rustup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the test repository
@@ -234,8 +234,8 @@ jobs:
             exit 1
           fi
 
-  test-rust-toolchain-with-toml-override:
-    name: Test the action with toolchain override specified in rust-toolchain.toml file
+  test-rust-toolchain-against-toml-override:
+    name: Test the action against toolchain override specified in rust-toolchain.toml file
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the test repository
