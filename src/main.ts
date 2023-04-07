@@ -80,7 +80,7 @@ async function installRustUpIfRequested(): Promise<void> {
         await rustup.setProfile("minimal");
         await rustup.installToolchain(toolchain);
 
-        process.env["RUSTUP_TOOLCHAIN"] = toolchain;
+        //process.env["RUSTUP_TOOLCHAIN"] = toolchain;
     }
 }
 
