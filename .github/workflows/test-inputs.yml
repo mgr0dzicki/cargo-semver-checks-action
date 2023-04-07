@@ -212,6 +212,21 @@ jobs:
         uses: ./action/
         with:
           rust-toolchain: nightly
+      - name: Get cache key
+        uses: actions/cache/restore@v3
+        id: get-cache-key
+        with:
+          path: ${{ github.workspace }}/semver-checks/target/semver-checks/cache
+          fail-on-cache-miss: true
+          lookup-only: true
+          key: -${{ github.job }}
+          restore-keys: |
+            -${{ github.job }}
+      - name: Check the toolchain used by the action
+        if: ${{ ! contains(steps.get-cache-key.outputs.cache-matched-key, 'nightly') }}
+        run: |
+          echo "The toolchain used by the action should be nightly, but it is not!"
+          exit 1
       - name: Check the active toolchain
         run: |
           if ! rustup show active-toolchain | grep -q "beta"; then
