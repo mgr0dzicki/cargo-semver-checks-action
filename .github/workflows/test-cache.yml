@@ -62,8 +62,8 @@ jobs:
             exit 1
           fi
       - name: Fail if the restored cache key does not match the cache hash
-        if: steps.restore.cache-matched-key != format('{0}-{1}', steps.generate_key.outputs.KEY, hashFiles('action-cache/**'))
+        if: steps.restore.outputs.cache-matched-key != format('{0}-{1}', steps.generate_key.outputs.KEY, hashFiles('action-cache/**'))
         run: |
-          echo "Error! The restored cache key is ${{ steps.restore.cache-matched-key }}, but should be ${{ format('{0}-{1}', steps.generate_key.outputs.KEY, hashFiles('action-cache/**')) }}"
+          echo "Error! The restored cache key is ${{ steps.restore.outputs.cache-matched-key }}, but should be ${{ format('{0}-{1}', steps.generate_key.outputs.KEY, hashFiles('action-cache/**')) }}"
           exit 1
 
