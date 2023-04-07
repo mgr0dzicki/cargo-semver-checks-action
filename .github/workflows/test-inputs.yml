@@ -239,7 +239,7 @@ jobs:
         with:
           rust-toolchain: ''
       - name: Uninstall Rust
-        run: rustup self uninstall
+        run: rustup self uninstall -y
       - name: Run the action (allowed to fail)
         id: action_without_rust
         uses: ./action/
@@ -266,6 +266,6 @@ jobs:
         with:
           path: action
       - name: Uninstall Rust
-        run: rustup self uninstall
+        run: rustup self uninstall -y
       - name: Run the action
         uses: ./action/
