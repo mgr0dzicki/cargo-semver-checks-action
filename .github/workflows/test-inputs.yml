@@ -249,8 +249,8 @@ jobs:
           path: action
       - name: Install latest beta
         uses: dtolnay/rust-toolchain@beta
-      #- name: Set override to beta in rust-toolchain.toml file
-      #  run: echo -e "[toolchain]\nchannel = \"beta\"" > rust-toolchain.toml
+      - name: Set override to beta in rust-toolchain.toml file
+        run: echo -e "[toolchain]\nchannel = \"beta\"" > rust-toolchain.toml
       - name: Run the action with rust-toolchain set to nightly
         uses: ./action/
         with:
