@@ -222,8 +222,8 @@ jobs:
           key: -${{ github.job }}
           restore-keys: |
             -${{ github.job }}
-      - name: Check the toolchain used by the action
-        if: ${{ ! contains(steps.get-cache-key.outputs.cache-matched-key, 'nightly') }}
+      - name: Fail if the toolchain used by the action is invalid
+        if: ${{ ! contains(steps.get-cache-key.outputs.cache-matched-key, 'stable') }}
         run: |
           echo "The toolchain used by the action should be nightly, but it is not!"
           exit 1
