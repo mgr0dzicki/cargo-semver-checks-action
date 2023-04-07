@@ -40,22 +40,30 @@ jobs:
       - name: Move the cache created by the action
         run: |
           mv semver-checks/target/semver-checks/cache action-cache
-      - name: Check tools versions
-        id: versions
+      - name: Generate primary cache key
+        id: generate_key
         run: |
-          echo "RUSTC=$(rustc --version | sed -e 's/\s\+/-/g')" >> $GITHUB_OUTPUT
-          echo "SEMVER_CHECKS=$(cargo semver-checks --version | sed -e 's/\s\+/-/g')" >> $GITHUB_OUTPUT
+          RUSTC=$(rustc --version | sed -e 's/\s\+/-/g')
+          SEMVER_CHECKS=$(cargo semver-checks --version | sed -e 's/\s\+/-/g')
+          echo "KEY=testprefix-testkey-linux-$RUSTC-$SEMVER_CHECKS-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc" >> $GITHUB_OUTPUT
       - name: Download saved cache
         uses: actions/cache/restore@v3
+        id: restore
         with:
           path: ${{ github.workspace }}/semver-checks/target/semver-checks/cache
           fail-on-cache-miss: true
           key: not_a_prefix
           restore-keys: |
-            testprefix-testkey-linux-${{ steps.versions.outputs.RUSTC }}-${{ steps.versions.outputs.SEMVER_CHECKS }}-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
+            ${{ steps.generate_key.outputs.KEY }}
       - name: Compare local and downloaded cache files
         run: |
           if ! diff -r "semver-checks/target/semver-checks/cache" "action-cache"; then
             echo "Downloaded cache does not match the local version!"
             exit 1
           fi
+      - name: Fail if the restored cache key does not match the cache hash
+        if: steps.restore.cache-matched-key != format('{0}-{1}, steps.generate_key.outputs.KEY, hashFiles('action-cache/**'))
+        run: |
+          echo "Error! The restored cache key is $ {{ steps.restore.cache-matched-key }}, but should be ${{ format('{0}-{1}, steps.generate_key.outputs.KEY, hashFiles('action-cache/**')) }}"
+          exit 1
+
