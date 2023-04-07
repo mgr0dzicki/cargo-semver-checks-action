@@ -32,7 +32,7 @@ jobs:
           fi
       - name: Move the cache created by the action
         run: |
-          mv semver-checks/target/semver-checks/cache restored-cache
+          # mv semver-checks/target/semver-checks/cache restored-cache
           ls semver-checks/target/semver-checks
       - name: Download saved cache
         uses: actions/cache/restore@v3
