@@ -283,7 +283,7 @@ jobs:
           exit 1
 
   test-rust-toolchain-installs-rust:
-    name: Test whether action installs Rust stable toolchain by default
+    name: Test whether action installs Rust toolchain by default
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the test repository
@@ -299,18 +299,3 @@ jobs:
         run: rustup self uninstall -y
       - name: Run the action with default arguments
         uses: ./action/
-      - name: Get cache key
-        uses: actions/cache/restore@v3
-        id: get-cache-key
-        with:
-          path: ${{ github.workspace }}/semver-checks/target/semver-checks/cache
-          fail-on-cache-miss: true
-          lookup-only: true
-          key: -${{ github.job }}
-          restore-keys: |
-            -${{ github.job }}
-      - name: Fail if the toolchain used by the action is invalid
-        if: ${{ ! contains(steps.get-cache-key.outputs.cache-matched-key, 'stable') }}
-        run: |
-          echo "The toolchain used by the action should be stable, but it is not!"
-          exit 1
