@@ -272,6 +272,7 @@ jobs:
           exit 1
       - name: Check the active toolchain
         run: |
+          rustup show active-toolchain
           if ! rustup show active-toolchain | grep -q "beta"; then
             echo "The active toolchain should be still beta, but it is $(rustup show active-toolchain)!"
             exit 1
