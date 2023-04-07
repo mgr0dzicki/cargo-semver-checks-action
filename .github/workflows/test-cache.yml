@@ -45,7 +45,7 @@ jobs:
           fail-on-cache-miss: true
           key: test
           restore-keys: |
-            testprefix-testkey-linux-${{ steps.versions.RUSTC_VERSION }}-${{ steps.versions.SEMVER_CHECKS_VERSION }}-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
+            testprefix-testkey-linux-${{ steps.versions.RUSTC_VERSION }}-${{ steps.versions.SEMVER_CHECKS_VERSION }}-db39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
       - name: Compare local and downloaded cache files
         run: |
           if ! diff -r "semver-checks/target/semver-checks/cache" "restored-cache"; then
