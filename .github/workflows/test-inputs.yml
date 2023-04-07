@@ -208,23 +208,6 @@ jobs:
         uses: dtolnay/rust-toolchain@beta
       - name: Set local override to beta
         run: rustup override set beta
-      - name: Run the action with default arguments
-        uses: ./action/
-      - name: Get cache key
-        uses: actions/cache/restore@v3
-        id: get-cache-key
-        with:
-          path: ${{ github.workspace }}/semver-checks/target/semver-checks/cache
-          fail-on-cache-miss: true
-          lookup-only: true
-          key: -${{ github.job }}
-          restore-keys: |
-            -${{ github.job }}
-      - name: Fail if the toolchain used by the action is invalid
-        if: ${{ ! contains(steps.get-cache-key.outputs.cache-matched-key, 'stable') }}
-        run: |
-          echo "The toolchain used by the action should be stable, but it is not!"
-          exit 1
       - name: Run the action with rust-toolchain set to nightly
         uses: ./action/
         with:
@@ -266,7 +249,7 @@ jobs:
           path: action
       - name: Install latest beta
         uses: dtolnay/rust-toolchain@beta
-      - name: Run the action
+      - name: Run the action with empty rust-toolchain
         uses: ./action/
         with:
           rust-toolchain: ''
@@ -287,7 +270,7 @@ jobs:
           exit 1
       - name: Uninstall Rust
         run: rustup self uninstall -y
-      - name: Run the action (allowed to fail)
+      - name: Run the action with empty rust-toolchain (allowed to fail)
         id: action_without_rust
         uses: ./action/
         with:
@@ -314,7 +297,7 @@ jobs:
           path: action
       - name: Uninstall Rust
         run: rustup self uninstall -y
-      - name: Run the action
+      - name: Run the action with default arguments
         uses: ./action/
       - name: Get cache key
         uses: actions/cache/restore@v3
