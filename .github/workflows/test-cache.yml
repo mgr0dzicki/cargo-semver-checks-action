@@ -1,5 +1,12 @@
 name: Test rustdoc caching
 
+# Assumes that the latest published normal version of `ref_slice` smaller
+# than 1.2.2 is 1.2.1.
+# TODO: Change the crate version in the corresponding branches `patch_change`
+# and `major_change` to 1.2.1 once new logic of choosing baseline is adapted.
+# Otherwise if new version 1.2.2 of `ref_slice` is released, the tests might
+# stop working correctly.
+
 on:
   workflow_call:
 
@@ -36,8 +43,8 @@ jobs:
       - name: Check tools versions
         id: versions
         run: |
-          echo "RUSTC_VERSION=$(rustc --version | sed -e 's/\s\+/-/g')" >> $GITHUB_OUTPUT
-          echo "SEMVER_CHECKS_VERSION=$(cargo semver-checks --version | sed -e 's/\s\+/-/g')" >> $GITHUB_OUTPUT
+          echo "RUSTC=$(rustc --version | sed -e 's/\s\+/-/g')" >> $GITHUB_OUTPUT
+          echo "SEMVER_CHECKS=$(cargo semver-checks --version | sed -e 's/\s\+/-/g')" >> $GITHUB_OUTPUT
       - name: Download saved cache
         uses: actions/cache/restore@v3
         with:
@@ -45,7 +52,7 @@ jobs:
           fail-on-cache-miss: true
           key: not_a_prefix
           restore-keys: |
-            testprefix-testkey-linux-${{ steps.versions.outputs.RUSTC_VERSION }}-${{ steps.versions.outputs.SEMVER_CHECKS_VERSION }}-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
+            testprefix-testkey-linux-${{ steps.versions.outputs.RUSTC }}-${{ steps.versions.outputs.SEMVER_CHECKS }}-da39a3ee5e6b4b0d3255bfef95601890afd80709-semver-checks-rustdoc
       - name: Compare local and downloaded cache files
         run: |
           if ! diff -r "semver-checks/target/semver-checks/cache" "restored-cache"; then
