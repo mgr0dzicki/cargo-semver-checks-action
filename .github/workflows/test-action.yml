@@ -9,6 +9,10 @@ on:
       runs-on:
         required: true
         type: string
+      rust-toolchain:
+        required: false
+        type: string
+        default: 'stable'
 
 env:
   RUST_BACKTRACE: 1
@@ -30,6 +34,8 @@ jobs:
           path: action
       - name: Run the action
         uses: ./action/
+        with:
+          rust-toolchain: ${{ inputs.rust-toolchain }}
       - name: Checkout the test with major change and patch version bump
         run: |
           git fetch origin major_change
@@ -37,6 +43,8 @@ jobs:
       - name: Run the action (allowed to fail)
         id: action_major
         uses: ./action/
+        with:
+          rust-toolchain: ${{ inputs.rust-toolchain }}
         continue-on-error: true
       - name: Fail if the action has not returned any errors (but it should have)
         if: steps.action_major.outcome != 'failure'

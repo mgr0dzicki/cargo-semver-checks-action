@@ -20,8 +20,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        toolchain: ['1.66', 'stable', 'beta', 'nightly']
     with:
       runs-on: ${{ matrix.os }}
+      rust-toolchain: ${{ matrix.toolchain }}
 
   test-inputs:
     name: Test action inputs
