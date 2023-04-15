@@ -17,13 +17,6 @@ jobs:
   test-action:
     name: Smoke test the action
     uses: ./.github/workflows/test-action.yml
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        toolchain: ['1.66', 'stable', 'beta', 'nightly']
-    with:
-      runs-on: ${{ matrix.os }}
-      rust-toolchain: ${{ matrix.toolchain }}
 
   test-inputs:
     name: Test action inputs
